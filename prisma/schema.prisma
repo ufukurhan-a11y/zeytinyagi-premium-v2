@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
 }
 
 model Customer {
@@ -18,18 +18,18 @@ model Customer {
 }
 
 model Order {
-  id             String      @id @default(cuid())
-  orderNo        String      @unique
-  status         String      @default("new")
-  total          Int
-  paymentMethod  String
-  note           String?
-  receipt        String?     // dekont dosya yolu (/receipts/{orderNo}.jpg)
-  receiptAt      DateTime?   // dekont ne zaman yüklendi
-  createdAt      DateTime    @default(now())
-  customerId     String
-  customer       Customer    @relation(fields: [customerId], references: [id])
-  items          OrderItem[]
+  id            String      @id @default(cuid())
+  orderNo       String      @unique
+  status        String      @default("new")
+  total         Int
+  paymentMethod String
+  note          String?
+  receipt       String?
+  receiptAt     DateTime?
+  createdAt     DateTime    @default(now())
+  customerId    String
+  customer      Customer    @relation(fields: [customerId], references: [id])
+  items         OrderItem[]
 }
 
 model OrderItem {
