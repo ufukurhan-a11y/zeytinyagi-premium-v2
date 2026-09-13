@@ -1,0 +1,202 @@
+/* ============================================================
+   KARGO ETİKETİ — A6 boy (105 × 148 mm)
+   Yazdırmada (Ctrl+P / Cmd+P) sadece etiket basılır;
+   sidebar/toolbar gizlenir.
+   ============================================================ */
+
+@page {
+  size: 105mm 148mm;
+  margin: 8mm;
+}
+
+/* Ekranda etiket kutusu */
+.shipping-label {
+  width: 105mm;
+  min-height: 148mm;
+  box-sizing: border-box;
+  border: 1px solid #d4d4d4;
+  background: #fff;
+  padding: 6mm;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: #111;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Başlık */
+.label-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 2mm;
+}
+.label-brand {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.label-sub {
+  font-size: 7pt;
+  color: #555;
+}
+.label-order-no {
+  font-size: 9pt;
+  background: #111;
+  color: #fff;
+  padding: 1mm 2.5mm;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+
+/* Ayırıcı çizgi */
+.label-rule {
+  border: 0;
+  border-top: 1.5px dashed #999;
+  margin: 2.5mm 0;
+}
+
+/* Adres bloğu — en büyük, en okunur kısım */
+.label-address-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5mm;
+}
+.label-name {
+  font-size: 13pt;
+  font-weight: 700;
+  line-height: 1.2;
+  word-break: break-word;
+}
+.label-phone {
+  font-size: 11pt;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.label-city {
+  font-size: 10pt;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.label-street {
+  font-size: 10pt;
+  line-height: 1.4;
+  color: #222;
+  word-break: break-word;
+}
+
+/* Ürün satırları */
+.label-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8mm;
+}
+.label-item-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8.5pt;
+  border-bottom: 1px dotted #ccc;
+  padding-bottom: 0.5mm;
+}
+.label-item-name {
+  flex: 1;
+  padding-right: 2mm;
+}
+.label-item-qty {
+  font-weight: 700;
+}
+
+/* Alt bilgi */
+.label-foot {
+  margin-top: 2.5mm;
+  font-size: 8pt;
+  color: #333;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1mm 3mm;
+}
+.label-foot strong {
+  color: #111;
+}
+.label-note {
+  grid-column: 1 / -1;
+  font-style: italic;
+  color: #555;
+}
+
+/* Kapıda Ödeme — kargo çalışanına tahsil tutarı (dikkat çekici) */
+.label-cod {
+  grid-column: 1 / -1;
+  font-size: 10pt;
+  font-weight: 700;
+  text-align: center;
+  color: #fff;
+  background: #111;
+  padding: 1.5mm;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+}
+.label-cod strong {
+  color: #fff;
+  font-size: 11pt;
+}
+
+/* Sahte "barkod" alanı — sipariş no tekrar */
+.label-scan {
+  margin-top: 2mm;
+  text-align: center;
+  font-size: 10pt;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  border: 1.5px solid #111;
+  padding: 1mm;
+  border-radius: 2px;
+}
+
+/* Araç çubuğu */
+.label-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 4mm;
+}
+
+/* ============================================================
+   YAZDIRMA: Sadece etiket basılır
+   ============================================================ */
+@media print {
+  /* Sayfa gövdesini temizle */
+  body {
+    background: #fff !important;
+  }
+
+  /* Sidebar ve main padding'i kaldır */
+  aside,
+  .label-toolbar {
+    display: none !important;
+  }
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Etiket tam sayfa dolsun, çerçeve gitmesin */
+  .shipping-label {
+    width: auto;
+    min-height: auto;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  /* Gömme/arka plan basılsın */
+  .label-scan,
+  .label-order-no {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

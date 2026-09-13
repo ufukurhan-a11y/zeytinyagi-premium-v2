@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local database
+prisma/dev.db
+prisma/migrations/
+
+# Local scripts (not for repo)
+_fix_*.mjs
+_fix_*.py
+_verify_*.mjs

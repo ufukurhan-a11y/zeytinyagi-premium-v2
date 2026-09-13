@@ -1,0 +1,11 @@
+# Kurulum sırasında kaydedilen sürümler (Aşama 1)
+node: v22.18.0
+npm: 10.9.3
+
+next: 16.3.4 (create-next-app@16.3.4 ile sabitlendi)
+react: ^19.2.8
+tailwindcss: ^4 (create-next-app varsayılanı)
+prisma: ^7.10.0 (Aşama 3'te eklenecek)
+better-sqlite3: ^13.0.3 (Aşama 3'te eklenecek)
+
+Kaynak proje: /Users/ufukurhan/Desktop/zeytinyagi-premium
