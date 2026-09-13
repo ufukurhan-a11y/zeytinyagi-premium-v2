@@ -1,26 +1,160 @@
 @import "tailwindcss";
 
+/* ============================================================
+   SAKIN EDITORIAL — SICAK PREMIUM (Zeytinyağı)
+   Tasarım token sistemi
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Tuval — sıcak krem, soğuk beyaz değil */
+  --canvas: #FAF9F5;
+  --canvas-alt: #F5F4ED;
+  --surface: #FFFFFF;
+
+  /* Mürekkep — sıcak nötr siyah */
+  --ink: #141413;
+  --ink-secondary: #3D3D3A;
+  --ink-tertiary: #73726C;
+
+  /* Aksan — derin zeytin yeşili (tek imza renk) */
+  --olive: #3D4A2A;
+  --olive-deep: #2E3820;
+  --olive-soft: #6B7A52;
+
+  /* Sıcak altın — sadece rozet/vurgu */
+  --gold: #9A7B3F;
+
+  /* Hata — sıcak kırmızı, soğuk değil */
+  --destructive: #B23A2E;
+  --destructive-foreground: #FFFFFF;
+
+  /* Sınırlar — çok sessiz */
+  --border-primary: rgba(20, 20, 19, 0.14);
+  --border-subtle: rgba(20, 20, 19, 0.08);
+
+  /* Radius ailesi */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  /* Tipografi değişkenleri (layout.tsx'den next/font/google ile geliyor;
+     bu ortamda Google istekleri asılı kalabildigi icin root layout'taki
+     next/font/google importu kaldirildi. Ayni degisken adlarini koruyarak
+     dizayni bozmamak icin fallback sistem fontlarini burada tanimliyoruz.) */
+  --font-inter: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-instrument-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-geist-mono: "Geist Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+  --font-mono: var(--font-geist-mono), monospace;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--canvas);
+  --color-canvas-alt: var(--canvas-alt);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-tertiary: var(--ink-tertiary);
+  --color-olive: var(--olive);
+  --color-olive-deep: var(--olive-deep);
+  --color-olive-soft: var(--olive-soft);
+  --color-gold: var(--gold);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border-primary: var(--border-primary);
+  --color-border-subtle: var(--border-subtle);
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================================
+   TEMEL
+   ============================================================ */
+
+* {
+  border-color: var(--border-subtle);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01", "cv03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tabular figures — fiyat ve teknik veriler için */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Serif editorial başlıklar */
+.font-serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Mono teknik veri */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Hafif kağıt dokusu — sadece canvas, abartısız */
+.grain {
+  position: relative;
+}
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Hairline ayraç */
+.hairline {
+  height: 1px;
+  background: var(--border-primary);
+}
+
+/* Erişilebilir odak halkası */
+:focus-visible {
+  outline: 2px solid var(--olive);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Seçim rengi */
+::selection {
+  background: var(--olive);
+  color: var(--canvas);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

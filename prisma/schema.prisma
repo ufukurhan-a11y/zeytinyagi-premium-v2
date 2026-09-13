@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String   @unique
+  city      String
+  district  String
+  address   String
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  orderNo        String      @unique
+  status         String      @default("new")
+  total          Int
+  paymentMethod  String
+  note           String?
+  receipt        String?     // dekont dosya yolu (/receipts/{orderNo}.jpg)
+  receiptAt      DateTime?   // dekont ne zaman yüklendi
+  createdAt      DateTime    @default(now())
+  customerId     String
+  customer       Customer    @relation(fields: [customerId], references: [id])
+  items          OrderItem[]
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+  label     String
+  sublabel  String
+  price     Int
+  qty       Int
+  order     Order  @relation(fields: [orderId], references: [id])
+}
