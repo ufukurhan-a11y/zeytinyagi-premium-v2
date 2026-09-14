@@ -23,9 +23,9 @@ export const PRODUCTS: ProductOption[] = [
   { id: "2x5l-teneke", category: "oil-teneke", label: "2× 5 Litre", sublabel: "Teneke paket", price: 3800, basePrice: 4000, unit: "₺380 / litre", badge: "İndirim", image: "/products/5l-teneke.jpg" },
   { id: "4x5l-teneke", category: "oil-teneke", label: "4× 5 Litre", sublabel: "Teneke paket", price: 7000, basePrice: 8000, unit: "₺350 / litre", badge: "En avantajlı", image: "/products/5l-teneke.jpg" },
 
-  // Zeytinyağı — Pet
-  { id: "1l-pet", category: "oil-pet", label: "1 Litre", sublabel: "Pet şişe", price: 500, unit: "₺500 / litre", image: "/products/1l-pet.jpg" },
-  { id: "2l-pet", category: "oil-pet", label: "2 Litre", sublabel: "Pet şişe", price: 900, basePrice: 1000, unit: "₺450 / litre", image: "/products/2l-pet.jpg" },
+  // Zeytinyağı — Pet ve teneke seçenekleri birlikte gösterilir
+  { id: "1l-pet", category: "oil-teneke", label: "1 Litre", sublabel: "Pet şişe", price: 500, unit: "₺500 / litre", image: "/products/1l-pet.jpg" },
+  { id: "2l-pet", category: "oil-teneke", label: "2 Litre", sublabel: "Pet şişe", price: 900, basePrice: 1000, unit: "₺450 / litre", image: "/products/2l-pet.jpg" },
 
   // Sele Zeytin — Az tuzlu, iri boy, yağlı sele zeytini
   { id: "1l-sele", category: "zeplin", label: "1 kg", sublabel: "Az tuzlu · İri boy · Yağlı sele zeytini", price: 400, unit: "₺400 / kg", image: "/products/1kg-sele.jpg" },
@@ -34,7 +34,7 @@ export const PRODUCTS: ProductOption[] = [
 ];
 
 export const CATEGORY_LABELS: Record<ProductCategory, string> = {
-  "oil-teneke": "Zeytinyağı — Teneke",
+  "oil-teneke": "Zeytinyağı — Teneke ve Pet Şişe",
   "oil-pet": "Zeytinyağı — Pet Şişe",
   zeplin: "Sele Zeytin",
 };

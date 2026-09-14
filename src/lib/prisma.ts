@@ -12,8 +12,13 @@ function getPrismaClient(): PrismaClient {
     throw new Error("DATABASE_URL ortam değişkeni tanımlı değil.");
   }
 
-  const adapter = new PrismaMariaDb(databaseUrl);
-  prismaClient = new PrismaClient({ adapter });
+  // Yerel geliştirme: file: ile başlayan adres SQLite demektir (adaptörsüz).
+  // Üretim: mysql:// adresi MariaDB adaptörüyle bağlanır.
+  const isLocalSqlite = databaseUrl.startsWith("file:");
+  const adapter = isLocalSqlite ? undefined : new PrismaMariaDb(databaseUrl);
+  prismaClient = adapter
+    ? new PrismaClient({ adapter })
+    : new PrismaClient();
 
   if (process.env.NODE_ENV !== "production") {
     globalForPrisma.prisma = prismaClient;

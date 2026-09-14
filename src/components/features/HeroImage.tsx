@@ -8,7 +8,7 @@ export function HeroImage() {
   const hasImage = !!selectedProduct.image;
 
   return (
-    <div className="group relative aspect-[4/5] overflow-hidden rounded-lg border border-border-subtle bg-surface shadow-[0_8px_30px_-12px_rgba(20,20,19,0.12)]">
+    <div className="group relative aspect-[4/5] overflow-hidden rounded-lg border border-border-subtle bg-canvas-alt shadow-[0_8px_30px_-12px_rgba(20,20,19,0.12)]">
       {hasImage ? (
         <Image
           src={selectedProduct.image!}
@@ -16,7 +16,7 @@ export function HeroImage() {
           fill
           priority
           sizes="(max-width: 640px) 100vw, 50vw"
-          className="object-cover transition-opacity duration-300"
+          className="object-contain p-3 transition-opacity duration-300 sm:p-5"
           key={selectedProduct.id}
         />
       ) : (

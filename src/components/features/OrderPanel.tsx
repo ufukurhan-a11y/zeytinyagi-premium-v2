@@ -19,8 +19,7 @@ import { META_EVENT_NAMES, type MetaProduct } from "@/lib/meta-pixel";
 import { BUSINESS } from "@/lib/business";
 
 const TABS: { id: ProductCategory; label: string; short: string }[] = [
-  { id: "oil-teneke", label: "Zeytinyağı — Teneke", short: "Teneke" },
-  { id: "oil-pet", label: "Zeytinyağı — Pet Şişe", short: "Pet Şişe" },
+  { id: "oil-teneke", label: "Zeytinyağı — Teneke ve Pet Şişe", short: "Zeytinyağı" },
   { id: "zeplin", label: "Sele Zeytin", short: "Sele Zeytin" },
 ];
 
@@ -233,13 +232,13 @@ export function OrderPanel() {
 
                 {/* Ürün görseli */}
                 {p.image && (
-                  <div className="mb-3 h-20 overflow-hidden rounded-md">
+                  <div className="mb-3 flex h-24 items-center justify-center overflow-hidden rounded-md bg-canvas-alt sm:h-20">
                     <Image
                       src={p.image}
                       alt={`${p.label} ${p.sublabel}`}
                       width={120}
-                      height={80}
-                      className="h-full w-full object-cover"
+                      height={96}
+                      className="h-full w-full object-contain p-1"
                     />
                   </div>
                 )}
