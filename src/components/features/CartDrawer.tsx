@@ -59,7 +59,7 @@ export function CartDrawer() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex justify-end">
+    <div className="fixed inset-0 z-100 flex justify-end">
       {/* Overlay */}
       <div
         className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
@@ -67,9 +67,9 @@ export function CartDrawer() {
         aria-hidden="true"
       />
 
-      {/* Drawer */}
+      {/* Drawer — mobilde tam genişlik, masaüstünde en fazla 420px */}
       <aside
-        className="relative flex h-full w-full max-w-md flex-col bg-canvas shadow-2xl"
+        className="relative flex h-full w-full max-w-105 flex-col bg-canvas shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-label="Sepet"

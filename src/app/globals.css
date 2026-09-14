@@ -90,6 +90,22 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Sabit başlık altında kalmaması için bölüm bağlantılarına üst boşluk ver */
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* Mobilde yatay taşmayı engelle — uzun kelimeler/büyük içerik için */
+body {
+  overflow-x: clip;
+}
+
+/* Dokunmatik ekranda buton parlamasını kapat (temiz görünüm) */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   background: var(--canvas);
   color: var(--ink);

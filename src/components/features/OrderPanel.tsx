@@ -16,6 +16,7 @@ import {
   cartEventId,
 } from "@/lib/meta-pixel-client";
 import { META_EVENT_NAMES, type MetaProduct } from "@/lib/meta-pixel";
+import { BUSINESS } from "@/lib/business";
 
 const TABS: { id: ProductCategory; label: string; short: string }[] = [
   { id: "oil-teneke", label: "Zeytinyağı — Teneke", short: "Teneke" },
@@ -44,7 +45,7 @@ function toMetaContent(p: ProductOption, qty: number): MetaProduct[] {
 }
 
 export function OrderPanel() {
-  const { addItem, setSelectedProduct } = useCart();
+  const { addItem, setSelectedProduct, items: existingItems } = useCart();
   const [tab, setTab] = useState<ProductCategory>("oil-teneke");
   const [selectedId, setSelectedId] = useState<string>("5l-teneke");
   const [qty, setQty] = useState(1);
@@ -78,11 +79,35 @@ export function OrderPanel() {
     setQty(1);
   };
 
+  /**
+   * Tek tıkla: ürünü sepete ekle, WhatsApp sipariş mesajını aç ve
+   * Meta Pixel AddToCart olayını gönder.
+   *
+   * WhatsApp mesajı mevcut sepeti (yeni eklenen de dahil) özetler;
+   * teslimat/ödeme bilgileri WhatsApp konuşmasında alınır.
+   */
   const handleAdd = () => {
+    // Mevcut sepet + yeni ürünü güncellemiş hali (günlük hesap için)
+    const existingInCart = existingItems.find(
+      (i) => i.product.id === current.id
+    );
+    const totalItems = existingItems
+      .map((i) =>
+        i.product.id === current.id
+          ? { ...i, qty: i.qty + qty }
+          : i
+      );
+    if (!existingInCart) totalItems.push({ product: current, qty });
+
+    const total = totalItems.reduce(
+      (sum, i) => sum + i.product.price * i.qty,
+      0
+    );
+
+    // 1) Sepete ekle (drawer otomatik açılır)
     addItem(current, qty);
-    // AddToCart — ürün gerçekten sepete eklendi.
-    // Aynı ürün için sabit event_id → adet güncelleme / yeniden açma
-    // aynı satın almayı tekrar saymaz.
+
+    // 2) Meta Pixel — AddToCart
     trackMetaEvent(
       META_EVENT_NAMES.AddToCart,
       {
@@ -93,6 +118,34 @@ export function OrderPanel() {
       },
       { eventId: cartEventId(current.id) }
     );
+
+    // 3) WhatsApp — tek tıkla sipariş mesajı aç
+    const SEP = "━━━━━━━━━━━━━━━━━";
+    const LINE = "───────────────";
+    const orderLines = totalItems
+      .map((i) => {
+        const name = `${i.product.label} ${i.product.sublabel}`;
+        const q = `× ${i.qty}`;
+        const price = `₺${(i.product.price * i.qty).toLocaleString("tr-TR")}`;
+        return `${name} ${q}  →  ${price}`;
+      })
+      .join("%0A");
+
+    const msg =
+      `${SEP}%0A` +
+      `🫒 ZEYTİNCİ YUSUF%0A` +
+      `Kırkağaç · Bakır Mahallesi%0A` +
+      `${SEP}%0A%0A` +
+      `SİPARİŞ ÖZETİ%0A` +
+      `${LINE}%0A` +
+      `${orderLines}%0A` +
+      `${LINE}%0A` +
+      `Toplam: ₺${total.toLocaleString("tr-TR")}%0A%0A` +
+      `Teslimat bilgileri (ad, telefon, adres) WhatsApp'ta paylaşın.%0A%0A` +
+      `Ücretsiz kargo · 1 iş gününde kargoda%0A` +
+      `${SEP}`;
+
+    window.open(`https://wa.me/${BUSINESS.whatsapp}?text=${msg}`, "_blank");
   };
 
   return (
@@ -101,7 +154,7 @@ export function OrderPanel() {
       <div
         role="tablist"
         aria-label="Ürün kategorisi"
-        className="inline-flex w-full rounded-lg border border-border-primary bg-canvas-alt/60 p-1"
+        className="flex w-full overflow-x-auto rounded-lg border border-border-primary bg-canvas-alt/60 p-1"
       >
         {TABS.map((t) => {
           const isActive = tab === t.id;
@@ -191,10 +244,10 @@ export function OrderPanel() {
                   </div>
                 )}
 
-                <div className="text-[14px] font-medium leading-tight text-ink">
+                <div className="pr-5 text-[14px] font-medium leading-tight text-ink">
                   {p.label}
                 </div>
-                <div className="mt-0.5 text-[12px] leading-tight text-ink-tertiary">
+                <div className="mt-0.5 pr-5 text-[12px] leading-tight text-ink-tertiary">
                   {p.sublabel}
                 </div>
 
@@ -227,7 +280,7 @@ export function OrderPanel() {
             <button
               onClick={() => setQty((q) => Math.max(1, q - 1))}
               aria-label="Azalt"
-              className="flex h-7 w-7 items-center justify-center rounded-md border border-border-primary text-ink transition-colors hover:bg-neutral-50"
+              className="flex h-9 w-9 items-center justify-center rounded-md border border-border-primary text-ink transition-colors hover:bg-neutral-50 active:bg-neutral-100"
             >
               −
             </button>
@@ -237,7 +290,7 @@ export function OrderPanel() {
             <button
               onClick={() => setQty((q) => Math.min(99, q + 1))}
               aria-label="Artır"
-              className="flex h-7 w-7 items-center justify-center rounded-md border border-border-primary text-ink transition-colors hover:bg-neutral-50"
+              className="flex h-9 w-9 items-center justify-center rounded-md border border-border-primary text-ink transition-colors hover:bg-neutral-50 active:bg-neutral-100"
             >
               +
             </button>
@@ -262,6 +315,9 @@ export function OrderPanel() {
         >
           Sepete Ekle — {qty} × {current.label}
         </Button>
+        <p className="mt-2 text-center text-[11px] text-ink-tertiary">
+          Sipariş WhatsApp'a iletilir · 1 iş gününde kargoda
+        </p>
       </div>
     </div>
   );

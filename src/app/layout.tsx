@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { CartProvider } from "@/lib/cart-context";
 import { CartDrawer } from "@/components/features/CartDrawer";
-import { ConsentBanner } from "@/components/features/ConsentBanner";
 import { MetaPixelProvider } from "@/lib/meta-pixel-client";
+import { ConsentBanner } from "@/components/features/ConsentBanner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -47,8 +47,8 @@ export default function RootLayout({
         <CartProvider>
           {children}
           <CartDrawer />
-          <ConsentBanner />
           <MetaPixelProvider />
+          <ConsentBanner />
         </CartProvider>
       </body>
     </html>

@@ -12,10 +12,10 @@ export default function Home() {
     <main className="grain min-h-screen bg-canvas text-ink">
       {/* ─────────── HEADER ─────────── */}
       <header className="sticky top-0 z-50 w-full border-b border-border-subtle bg-canvas/85 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-5 sm:h-16 sm:px-8">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-8">
           <a href="#" className="flex items-center gap-3">
             {/* Premium zeytin damlası logosu */}
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-olive-soft to-olive-deep shadow-md ring-1 ring-white/10">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-olive-soft to-olive-deep shadow-md ring-1 ring-white/10">
               <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
                 <defs>
                   <linearGradient id="hdr-drop" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
@@ -38,15 +38,11 @@ export default function Home() {
             <span className="font-serif text-lg leading-tight tracking-tight text-ink sm:text-xl">
               Zeytinci Yusuf
             </span>
-            <span className="hidden h-4 w-px bg-border-primary sm:inline-block" />
-            <span className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-ink-tertiary sm:inline">
-              Kırkağaç · Bakır Mahallesi
-            </span>
           </a>
-          <nav className="flex items-center gap-1">
+          <nav className="flex shrink-0 items-center gap-1">
             <a
               href="#urun"
-              className="px-3 py-2 text-[13px] font-medium text-ink-secondary transition-colors hover:text-olive sm:text-sm"
+              className="px-2 py-2 text-[13px] font-medium text-ink-secondary transition-colors hover:text-olive sm:px-3 sm:text-sm"
             >
               Ürün
             </a>
@@ -157,8 +153,8 @@ export default function Home() {
         </div>
       </section>
       {/* Ücretsiz kargo çağrısı */}
-      <div className="mx-auto max-w-5xl px-5 sm:px-8">
-        <div className="flex items-center justify-between gap-4 rounded-xl border border-olive/20 bg-olive/[0.04] px-5 py-4 sm:px-8 sm:py-5">
+      <div className="mx-auto max-w-5xl px-4 sm:px-8">
+        <div className="flex flex-col gap-4 rounded-xl border border-olive/20 bg-olive/[0.04] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-olive/10">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-olive">

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import {
   META_PIXEL_ID,
+  CONSENT_COOKIE,
   orderEventId,
   cartEventId,
   type MetaEventName,
@@ -13,48 +14,46 @@ declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
     _fbq?: unknown[];
-    metaConsent?: boolean;
   }
 }
 
-// KVKK consent — cookie ile kalıcı, sunucu tarafı da okuyabilir.
-const CONSENT_KEY = "zyusuf_konsent";
-
 /**
- * Meta Pixel'i KVKK onayı kapılı şekilde yükler.
- * - /admin altındaki rotalarda hiç çalışmaz (özellik gereği).
- * - Onay yoksa pixel script yüklenmez ve hiçbir istek gitmez.
- * - Onay verilince PageView gönderilir, ürün/sepet olayları tarayıcıdan tetiklenir.
+ * Çerezden onay durumunu okur: true (kabul) / false (red) / null (karar yok).
+ * Sunucuda güvenli varsayılan "null" döner; hiçbir şey yüklenmez.
  */
-export function MetaPixelProvider() {
-  const initialized = useRef(false);
-
-  useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    // Admin rotasında pixel asla çalışmasın
-    if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
-      window.metaConsent = false;
-      return;
-    }
-
-    const consent = readConsent();
-    if (!consent) {
-      window.metaConsent = false;
-      return;
-    }
-    window.metaConsent = true;
-
-    const f = defineFbq();
-    f("init", META_PIXEL_ID);
-    f("track", "PageView");
-  }, []);
-
+export function readMetaConsent(): boolean | null {
+  if (typeof document === "undefined") return null;
+  const m = document.cookie
+    .split(";")
+    .map((s) => s.trim())
+    .find((s) => s.startsWith(`${CONSENT_COOKIE}=`));
+  const v = m?.split("=")[1];
+  if (v === "1") return true;
+  if (v === "0") return false;
   return null;
 }
 
-/** fbq()'u tanımlar; henüz yoksa kuyruk kur. */
+/**
+ * Onay kararını çereze yazar (1 yıl).
+ * Kabul edildiyse pixel'İ ANINDA başlatır; reddedildiyse hiçbir şey yapmaz —
+ * zaten hiç yüklenmemiş olan script için temizlik gerekmez.
+ */
+export function setMetaConsent(granted: boolean) {
+  if (typeof window === "undefined") return;
+  const secure = window.location.protocol === "https:" ? "; secure" : "";
+  document.cookie = `${CONSENT_COOKIE}=${granted ? "1" : "0"}; path=/; max-age=31536000; samesite=lax${secure}`;
+  if (granted) initMetaPixel();
+}
+
+/** /admin altındakı rotalarda pixel asla çalışmaz (özellik gereği). */
+function isAdminRoute(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.location.pathname.startsWith("/admin")
+  );
+}
+
+/** fbq()'u tanımlar; henüz yoksa kuyruk kurar ve fbevents.js'i yükler. */
 function defineFbq(): (...args: unknown[]) => void {
   const w = window;
   if (typeof w.fbq === "function") {
@@ -73,34 +72,41 @@ function defineFbq(): (...args: unknown[]) => void {
   return fbq;
 }
 
-function readConsent(): boolean {
-  if (typeof document === "undefined") return false;
-  const m = document.cookie
-    .split(";")
-    .map((s) => s.trim())
-    .find((s) => s.startsWith(`${CONSENT_KEY}=`));
-  return m?.split("=")[1] === "1";
+/**
+ * Pixel'i başlatır. YALNIZCA onay verildikten sonra çağrılmalı:
+ * onay yokken bu fonksiyon hiçbir yerden tetiklenmez, script yüklenmez,
+ * Meta'ya hiçbir istek gitmez (KVKK).
+ */
+function initMetaPixel() {
+  if (isAdminRoute()) return;
+  const f = defineFbq();
+  f("init", META_PIXEL_ID);
+  f("track", "PageView");
 }
 
-/** KVKK onay/ret — cookie yaz. */
-export function setMetaConsent(granted: boolean) {
-  if (typeof document === "undefined") return;
-  if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
-    // admin rotasında izinsiz takip yok
-    return;
-  }
-  const value = granted ? "1" : "0";
-  document.cookie = `${CONSENT_KEY}=${value};path=/;max-age=${
-    granted ? 60 * 60 * 24 * 30 : 0
-  };SameSite=Lax`;
-  window.metaConsent = granted;
-  if (granted && typeof window.fbq === "function") {
-    // Geç onayda PageView telafi
-    window.fbq("track", "PageView");
-  }
+/**
+ * Kök layout'a monte edilir; ekranda hiçbir şey çizmez.
+ * Sayfa açılışında yalnızca DAHA ÖNCE onay verilmişse (çerez "1")
+ * pixel başlatılır. Onay yoksa hiçbir şey yapılmaz.
+ */
+export function MetaPixelProvider() {
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    if (readMetaConsent() === true) {
+      initMetaPixel();
+    }
+  }, []);
+
+  return null;
 }
 
-/** Tarayıcıdan olay gönder — yalnızca onay varsa ve admin rotasında değilse. */
+/**
+ * Tarayıcıdan olay gönder. Onay verilmemişse window.fbq hiç tanımlı
+ * olmadığı için bu fonksiyon sessizce çıkar — olay kaybolur, istek gitmez.
+ */
 export function trackMetaEvent(
   name: MetaEventName,
   payload: { currency: string; value: number; contents: MetaProduct[]; numItems: number },
@@ -108,7 +114,7 @@ export function trackMetaEvent(
 ) {
   if (typeof window === "undefined") return;
   if (window.location.pathname.startsWith("/admin")) return;
-  if (!window.metaConsent || typeof window.fbq !== "function") return;
+  if (typeof window.fbq !== "function") return;
   window.fbq("track", name, {
     currency: payload.currency,
     value: payload.value,

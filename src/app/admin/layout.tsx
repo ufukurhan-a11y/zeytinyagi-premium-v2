@@ -25,7 +25,8 @@ export default async function AdminLayout({
     <div className="admin-shell">
       {authed ? (
         <div className="flex min-h-screen bg-neutral-100 text-neutral-900">
-          <aside className="fixed inset-y-0 left-0 z-40 flex w-52 flex-col border-r border-neutral-200 bg-white print:hidden">
+          {/* Kenar çubuğu — yalnızca geniş ekranda görünür */}
+          <aside className="fixed inset-y-0 left-0 z-40 hidden w-52 flex-col border-r border-neutral-200 bg-white md:flex print:hidden">
             <div className="border-b border-neutral-200 px-5 py-5">
               <div className="font-serif text-lg font-semibold tracking-tight">
                 Zeytinci Yusuf
@@ -41,7 +42,14 @@ export default async function AdminLayout({
               </Link>
             </div>
           </aside>
-          <main className="ml-52 min-h-screen px-8 py-8 print:ml-0 print:px-0 print:py-0">
+          {/* Mobil üst çubuk — dar ekranda kenar çubuğunun yerine geçer */}
+          <div className="fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 border-b border-neutral-200 bg-white px-4 py-2.5 md:hidden print:hidden">
+            <Link href="/admin" className="font-serif text-sm font-semibold tracking-tight">
+              Zeytinci Yusuf
+            </Link>
+            <AdminNav horizontal />
+          </div>
+          <main className="min-h-screen px-4 py-16 pt-20 md:ml-52 md:px-8 md:py-8 md:pt-8 print:ml-0 print:px-0 print:py-0">
             {children}
           </main>
         </div>
