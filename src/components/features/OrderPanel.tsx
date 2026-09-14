@@ -232,12 +232,12 @@ export function OrderPanel() {
 
                 {/* Ürün görseli */}
                 {p.image && (
-                  <div className="mb-3 flex h-24 items-center justify-center overflow-hidden rounded-md bg-canvas-alt sm:h-20">
+                  <div className="mb-3 flex h-28 items-center justify-center overflow-hidden rounded-md bg-canvas-alt sm:h-20">
                     <Image
                       src={p.image}
                       alt={`${p.label} ${p.sublabel}`}
                       width={120}
-                      height={96}
+                      height={112}
                       className="h-full w-full object-contain p-1"
                     />
                   </div>

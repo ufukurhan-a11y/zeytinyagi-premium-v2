@@ -16,7 +16,7 @@ export function HeroImage() {
           fill
           priority
           sizes="(max-width: 640px) 100vw, 50vw"
-          className="object-contain p-3 transition-opacity duration-300 sm:p-5"
+          className="h-full w-full object-contain p-2 transition-opacity duration-300 sm:p-5"
           key={selectedProduct.id}
         />
       ) : (

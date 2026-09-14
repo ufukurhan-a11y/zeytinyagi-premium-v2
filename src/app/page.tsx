@@ -107,14 +107,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-12 sm:gap-12 lg:gap-16">
-            {/* Sol: ürün görseli — OrderPanel kontrol eder */}
-            <div className="order-2 sm:col-span-6 sm:order-1">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-12 sm:gap-12 lg:gap-16">
+            {/* Sol: ürün görseli — mobilde de ürün ilk görünür */}
+            <div className="order-1 sm:col-span-6 sm:order-1">
               <HeroImage />
             </div>
 
             {/* Sağ: hero metni + satın alma */}
-            <div className="order-1 sm:col-span-6 sm:order-2 sm:flex sm:flex-col sm:justify-center">
+            <div className="order-2 sm:col-span-6 sm:order-2 sm:flex sm:flex-col sm:justify-center">
               {/* Editorial başlık */}
               <h1 className="font-serif text-[2.5rem] leading-[1.02] tracking-[-0.025em] text-ink sm:text-[3.25rem] sm:leading-[0.98]">
                 Dededen toruna,
